@@ -40,28 +40,30 @@ public class Complex {
     {
         double r;
         double i;
-        r = a.getReal() + b.getReal();
-        i = a.getImaginary() + b.getImaginary();
+        r = a.getReal() * b.getReal() - a.getImaginary() * b.getImaginary();
+        i = a.getReal() * b.getImaginary() + a.getImaginary() * b.getReal();
         return new Complex(r,i);
     }
 
     public Complex devideComplex(Complex a, Complex b)
     {
-        double r;
-        double i;
-        r = a.getReal() + b.getReal();
-        i = a.getImaginary() + b.getImaginary();
-        return new Complex(r,i);
+        Complex Denominator = multiplyComplex(a,conjugateComplex(b));
+        return new Complex(Denominator.getReal(),Denominator.getImaginary());
+    }
+
+    public Complex conjugateComplex (Complex a)
+    {
+        return(new Complex(a.getReal(),-1*a.getImaginary()));
     }
 
     public Complex sinComplex(Complex a)
     {
-        return new Complex(Math.sin(real) * Math.cosh(imaginary), Math.cos(real) * Math.sinh(imaginary));
+        return new Complex(Math.sin(a.getReal()) * Math.cosh(a.getImaginary()), Math.cos(a.getReal()) * Math.sinh(a.getImaginary()));
     }
 
     public Complex cosComplex(Complex a)
     {
-        return new Complex(Math.cos(real) * Math.cosh(imaginary), -Math.sin(real) * Math.sinh(imaginary));
+        return new Complex(Math.cos(a.getReal()) * Math.cosh(a.getImaginary()), -Math.sin(a.getReal()) * Math.sinh(a.getImaginary()));
     }
 
     public Complex tanComplex(Complex a)
@@ -69,8 +71,6 @@ public class Complex {
         return devideComplex(sinComplex(a),cosComplex(a));
 
     }
-
-
 
     public double getImaginary() {
         return imaginary;
