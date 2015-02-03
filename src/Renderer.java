@@ -2,27 +2,28 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static java.lang.Character.toUpperCase;
 
 /**
  * Created by Roberto on 2/2/2015.
  */
-public class Renderer extends Canvas implements KeyListener,Runnable {
+public class Renderer extends Canvas implements KeyListener,Runnable,Spliterator {
 
     private boolean[] keys;
     private BufferedImage back;
-    Color backroundColor = new Color(0,0,0,255);
+    Color backroundColor = new Color(225,225,225);
     private final int width;
     private final int height;
+    boolean init =  true;
     private double xRadian;
     private double yRadian;
     private double zRadian;
     private double zoom;
+    int res = 0;
+
 
     Random rand = new Random();
 
@@ -62,19 +63,33 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         graphToBack.setColor(backroundColor);
         graphToBack.fillRect(0, 0, width, height);
 
+        graphToBack.setColor(Color.black);
+
         for(int x = 0; x< width; x++)
         {
             for(int y = 0; y< height; y++) {
-                double w = 2/width;
-                double h = 2/width;
-                double bound;
+                double w = 4*((double)x-840)/(double)width;
+                double h = 4*((double)y-525)/(double)width;
                 Complex z = new Complex(w,h);
 
-               
+
+
+                for(int itr = 0; itr < res; itr ++)
+                {
+                    z = (Complex.addComplex(new Complex(w,h),Complex.multiplyComplex(z,z)));
+                }
+
+                if( z.getReal() + z.getImaginary() <2)
+                {
+                    graphToBack.fillRect(x,y,1,1);
+                }
 
 
             }
         }
+
+        res++;
+
 
 
         twoDGraph.drawImage(back, null, 0, 0);
@@ -184,6 +199,8 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     }
 
 
+
+
     //allows for the constant key listing
     public void run() {
         try {
@@ -194,4 +211,24 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         } catch (Exception e) {
         }
     }//run
+
+    @Override
+    public boolean tryAdvance(Consumer action) {
+        return false;
+    }
+
+    @Override
+    public Spliterator trySplit() {
+        return null;
+    }
+
+    @Override
+    public long estimateSize() {
+        return 0;
+    }
+
+    @Override
+    public int characteristics() {
+        return 0;
+    }
 }

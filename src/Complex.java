@@ -13,9 +13,6 @@ public class Complex {
 
     }
 
-    public Complex(double imaginary) {
-        this.imaginary = imaginary;
-    }
 
     public static Complex addComplex(Complex a, Complex b)
     {
@@ -36,7 +33,7 @@ public class Complex {
         return new Complex(r,i);
     }
 
-    public Complex multiplyComplex(Complex a, Complex b)
+    public static Complex multiplyComplex(Complex a, Complex b)
     {
         double r;
         double i;
@@ -45,28 +42,28 @@ public class Complex {
         return new Complex(r,i);
     }
 
-    public Complex devideComplex(Complex a, Complex b)
+    public static Complex devideComplex(Complex a, Complex b)
     {
         Complex Denominator = multiplyComplex(a,conjugateComplex(b));
         return new Complex(Denominator.getReal(),Denominator.getImaginary());
     }
 
-    public Complex conjugateComplex (Complex a)
+    public static Complex conjugateComplex (Complex a)
     {
         return(new Complex(a.getReal(),-1*a.getImaginary()));
     }
 
-    public Complex sinComplex(Complex a)
+    public static Complex sinComplex(Complex a)
     {
         return new Complex(Math.sin(a.getReal()) * Math.cosh(a.getImaginary()), Math.cos(a.getReal()) * Math.sinh(a.getImaginary()));
     }
 
-    public Complex cosComplex(Complex a)
+    public static Complex cosComplex(Complex a)
     {
         return new Complex(Math.cos(a.getReal()) * Math.cosh(a.getImaginary()), -Math.sin(a.getReal()) * Math.sinh(a.getImaginary()));
     }
 
-    public Complex tanComplex(Complex a)
+    public static Complex tanComplex(Complex a)
     {
         return devideComplex(sinComplex(a),cosComplex(a));
 
