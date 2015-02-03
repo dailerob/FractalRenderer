@@ -10,7 +10,7 @@ import static java.lang.Character.toUpperCase;
 /**
  * Created by Roberto on 2/2/2015.
  */
-public class Renderer extends Canvas implements KeyListener,Runnable,Spliterator {
+public class Renderer extends Canvas implements KeyListener,Runnable {
 
     private boolean[] keys;
     private BufferedImage back;
@@ -212,23 +212,4 @@ public class Renderer extends Canvas implements KeyListener,Runnable,Spliterator
         }
     }//run
 
-    @Override
-    public boolean tryAdvance(Consumer action) {
-        return false;
-    }
-
-    @Override
-    public Spliterator trySplit() {
-        return null;
-    }
-
-    @Override
-    public long estimateSize() {
-        return 0;
-    }
-
-    @Override
-    public int characteristics() {
-        return 0;
-    }
 }
