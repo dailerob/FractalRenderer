@@ -17,6 +17,8 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     Color backroundColor = new Color(225,225,225);
     private final int width;
     private final int height;
+    static boolean [][] drawMap;
+    private MathOperations [] threads = new MathOperations [8];
     boolean init =  true;
     private double xRadian;
     private double yRadian;
@@ -27,15 +29,19 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
 
     Random rand = new Random();
 
-    public Renderer(int width, int hieght)
+    public Renderer(int width, int height)
     {
         this.width = width;
-        this.height = hieght;
+        this.height = height;
         keys = new boolean[4];
         setBackground(Color.WHITE);
         setVisible(true);
         new Thread(this).start();
         addKeyListener(this);		//starts the key thread to log key strokes
+        drawMap = new boolean [width] [height];
+        for(int x = 0; x<8; x++)
+            threads[x] = new MathOperations(new Complex(0, 0), 0, 0);
+
     }
 
 
@@ -65,30 +71,36 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
 
         graphToBack.setColor(Color.black);
 
+
+        int threadIndex = 0;
         for(int x = 0; x< width; x++)
         {
             for(int y = 0; y< height; y++) {
+
+                while(!threads[threadIndex].done())
+                {
+                    if(threadIndex<7)
+                        threadIndex++;
+                    else
+                        threadIndex = 0;
+                }
+
                 double w = 4*((double)x-840)/(double)width;
                 double h = 4*((double)y-525)/(double)width;
                 Complex z = new Complex(w,h);
-
-
-
-                for(int itr = 0; itr < res; itr ++)
-                {
-                    z = (Complex.addComplex(new Complex(w,h),Complex.multiplyComplex(z,z)));
-                }
-
-                if( z.getReal() + z.getImaginary() <2)
-                {
-                    graphToBack.fillRect(x,y,1,1);
-                }
-
-
+                threads[threadIndex].Mendlebraught(w,h,10);
             }
+            if(x!=0 && x%10 == 0)
+                System.out.println(x);
         }
 
-        res++;
+        for(int x = 0; x< width; x++)
+        {
+            for(int y = 0; y< height; y++) {
+                if(drawMap [x][y])
+                    graphToBack.fillRect(x,y,1,1);
+            }
+        }
 
 
 
