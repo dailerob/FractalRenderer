@@ -5,8 +5,8 @@ import java.awt.*;
  * Created by Roberto on 2/2/2015.
  */
 public class FractalRunner extends JFrame{
-    private static final int WIDTH = 1680;
-    private static final int HEIGHT = 1050;
+    private static final int WIDTH = 2000;
+    private static final int HEIGHT = 2000;
 
     public FractalRunner()
     {

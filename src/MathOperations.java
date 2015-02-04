@@ -22,10 +22,13 @@ public class MathOperations extends Thread {
 
 
 
-    public void Mendlebraught(double w, double h, int iterations)
+    public void Mendlebraught(Complex f, int ww, int hh, int iterations)
     {
+        z = new Complex(f.getReal(),f.getImaginary());
+        width = ww;
+        height = hh;
         for(int x = 0; x< iterations; x++)
-            z = (Complex.addComplex(new Complex(w,h),Complex.multiplyComplex(z,z)));
+            z = (Complex.addComplex(f,Complex.multiplyComplex(z,z)));
 
         if(z.getReal()+z.getImaginary()<2)
         {
@@ -51,6 +54,6 @@ public class MathOperations extends Thread {
     @Override
     public void run() {
 
-        Mendlebraught(width,height,10);
+        Mendlebraught(new Complex(0,0),width,height,100);
     }
 }

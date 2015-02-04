@@ -85,14 +85,16 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
                         threadIndex = 0;
                 }
 
-                double w = 4*((double)x-840)/(double)width;
-                double h = 4*((double)y-525)/(double)width;
+                double w = 4*((double)x-((double)width/2))/(double)width;
+                double h = 4*((double)y-((double)height/2))/(double)width;
                 Complex z = new Complex(w,h);
-                threads[threadIndex].Mendlebraught(w,h,10);
+                threads[threadIndex].Mendlebraught(z,x,y,res);
             }
-            if(x!=0 && x%10 == 0)
+            if(x%10 == 0)
                 System.out.println(x);
         }
+        res++;
+
 
         for(int x = 0; x< width; x++)
         {
