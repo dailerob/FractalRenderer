@@ -3,18 +3,18 @@
  */
 public class MathOperations extends Thread {
     private Complex z;
-    private int width;
-    private int height;
+    private int xcord;
+    private int ycord;
     private boolean isDone;
 
 
 
 
 
-    public MathOperations(Complex z,int width, int height)
+    public MathOperations(Complex z,int xcord, int ycord)
     {
-        this.width = width;
-        this.height = height;
+        this.xcord = xcord;
+        this.ycord = ycord;
         this.z = z;
         isDone = false;
         start();
@@ -22,15 +22,15 @@ public class MathOperations extends Thread {
 
 
 
-    public void Mendlebraught(Complex f, int ww, int hh, int iterations)
+    public void Mendlebraught(Complex f, int xcord, int ycord, int iterations)
     {
         z = new Complex(f.getReal(),f.getImaginary());
-        width = ww;
-        height = hh;
+        this.xcord = xcord;
+        this.ycord = ycord;
         for(int x = 0; x< iterations; x++)
             z = (Complex.addComplex(f,Complex.multiplyComplex(z,z)));
 
-        if(z.getReal()+z.getImaginary()<2)
+        if(Math.sqrt(z.getReal()*z.getReal()+z.getImaginary()*z.getImaginary())<2)
         {
             writeDrawMap(true);
         }
@@ -38,11 +38,30 @@ public class MathOperations extends Thread {
             writeDrawMap(false);
     }
 
+    public void JuliaSet(Complex f, int xcord, int ycord, int iterations)
+    {
+        z = new Complex(f.getReal(),f.getImaginary());
+        this.xcord = xcord;
+        this.ycord = ycord;
+        for(int x = 0; x< iterations; x++)
+            z = (Complex.addComplex(new Complex(-0.835,-0.2321),Complex.multiplyComplex(z,z)));
+
+        if(Math.sqrt(z.getReal()*z.getReal()+z.getImaginary()*z.getImaginary())<2)
+        {
+            writeDrawMap(true);
+        }
+        else
+            writeDrawMap(false);
+    }
+
+
+
     public synchronized void writeDrawMap(boolean draw)
     {
-        Renderer.drawMap[width][height] = draw;
+        Renderer.drawMap[xcord][ycord] = draw;
         isDone=true;
     }
+
 
     public boolean done ()
     {
@@ -54,6 +73,6 @@ public class MathOperations extends Thread {
     @Override
     public void run() {
 
-        Mendlebraught(new Complex(0,0),width,height,100);
+        JuliaSet(new Complex(0, 0), xcord, ycord, 100);
     }
 }

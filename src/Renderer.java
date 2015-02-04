@@ -18,7 +18,7 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     private final int width;
     private final int height;
     static boolean [][] drawMap;
-    private MathOperations [] threads = new MathOperations [8];
+    private MathOperations [] threads = new MathOperations [10];
     boolean init =  true;
     private double xRadian;
     private double yRadian;
@@ -39,7 +39,7 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         new Thread(this).start();
         addKeyListener(this);		//starts the key thread to log key strokes
         drawMap = new boolean [width] [height];
-        for(int x = 0; x<8; x++)
+        for(int x = 0; x<10; x++)
             threads[x] = new MathOperations(new Complex(0, 0), 0, 0);
 
     }
@@ -85,10 +85,10 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
                         threadIndex = 0;
                 }
 
-                double w = 4*((double)x-((double)width/2))/(double)width;
-                double h = 4*((double)y-((double)height/2))/(double)width;
-                Complex z = new Complex(w,h);
-                threads[threadIndex].Mendlebraught(z,x,y,res);
+                double graphx = 4*((double)x-((double)width/2))/(double)width;
+                double graphy = 4*((double)y-((double)height/2))/(double)width;
+                Complex z = new Complex(graphx,graphy);
+                threads[threadIndex].JuliaSet(z,x,y,res);
             }
             if(x%10 == 0)
                 System.out.println(x);
@@ -108,6 +108,8 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
 
         twoDGraph.drawImage(back, null, 0, 0);
     }//paint
+
+
 
     //serves to create actions when keys are pressed
     public void keyPressed(KeyEvent e) {
@@ -174,7 +176,6 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     //has to be here for keyListener
     public void keyTyped(KeyEvent e) {
     }
-
     //user input variable minipulation
     public void incYradian() {
         yRadian +=.01;
