@@ -77,18 +77,21 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         {
             for(int y = 0; y< height; y++) {
 
-                while(!threads[threadIndex].done())
+                while(!threads[threadIndex].done())//checks wich thread is finished and can start on new pixel
                 {
                     if(threadIndex<7)
                         threadIndex++;
                     else
                         threadIndex = 0;
                 }
+                threads[threadIndex].stop();
 
                 double graphx = 4*((double)x-((double)width/2))/(double)width;
                 double graphy = 4*((double)y-((double)height/2))/(double)width;
                 Complex z = new Complex(graphx,graphy);
-                threads[threadIndex].JuliaSet(z,x,y,res);
+                //threads[threadIndex].begin(z, x, y, res);//attempts to start new thread <<--this is what does not work!!!!!
+                threads[threadIndex].JuliaSet(z,x,y,res);//working code, no multithreading, i think =(
+
             }
             if(x%10 == 0)
                 System.out.println(x);

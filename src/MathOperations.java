@@ -5,6 +5,7 @@ public class MathOperations extends Thread {
     private Complex z;
     private int xcord;
     private int ycord;
+    private int iterations;
     private boolean isDone;
 
 
@@ -17,6 +18,15 @@ public class MathOperations extends Thread {
         this.ycord = ycord;
         this.z = z;
         isDone = false;
+        //start();
+    }
+
+    public void begin(Complex f, int xcord, int ycord, int iterations)
+    {
+        z = f;
+        this.xcord = xcord;
+        this.ycord = ycord;
+        this.iterations = iterations;
         start();
     }
 
@@ -29,6 +39,7 @@ public class MathOperations extends Thread {
         this.ycord = ycord;
         for(int x = 0; x< iterations; x++)
             z = (Complex.addComplex(f,Complex.multiplyComplex(z,z)));
+
 
         if(Math.sqrt(z.getReal()*z.getReal()+z.getImaginary()*z.getImaginary())<2)
         {
@@ -73,6 +84,6 @@ public class MathOperations extends Thread {
     @Override
     public void run() {
 
-        JuliaSet(new Complex(0, 0), xcord, ycord, 100);
+        JuliaSet(new Complex(0, 0), xcord, ycord, iterations);
     }
 }
