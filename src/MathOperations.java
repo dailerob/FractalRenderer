@@ -1,89 +1,46 @@
 /**
  * Created by Roberto on 2/3/2015.
  */
-public class MathOperations extends Thread {
+public class MathOperations implements Runnable {
+
+
     private Complex z;
-    private int xcord;
-    private int ycord;
-    private int iterations;
-    private boolean isDone;
+    int xcord;
+    int ycord;
+    int iterations;
 
 
-
-
-
-    public MathOperations(Complex z,int xcord, int ycord)
+    public MathOperations(Complex z, int xcord, int ycord, int iterations)
     {
-        this.xcord = xcord;
-        this.ycord = ycord;
         this.z = z;
-        isDone = false;
-        //start();
-    }
-
-    public void begin(Complex f, int xcord, int ycord, int iterations)
-    {
-        z = f;
         this.xcord = xcord;
         this.ycord = ycord;
         this.iterations = iterations;
-        start();
     }
 
 
-
-    public void Mendlebraught(Complex f, int xcord, int ycord, int iterations)
+    public void Mendlebraught()
     {
-        z = new Complex(f.getReal(),f.getImaginary());
-        this.xcord = xcord;
-        this.ycord = ycord;
         for(int x = 0; x< iterations; x++)
-            z = (Complex.addComplex(f,Complex.multiplyComplex(z,z)));
+            z = (Complex.addComplex(new Complex(xcord,ycord),Complex.multiplyComplex(z,z)));
 
 
         if(Math.sqrt(z.getReal()*z.getReal()+z.getImaginary()*z.getImaginary())<2)
         {
-            writeDrawMap(true);
+            writeDrawMap(xcord, ycord, true);
         }
         else
-            writeDrawMap(false);
+            writeDrawMap(xcord, ycord, false);
     }
 
-    public void JuliaSet(Complex f, int xcord, int ycord, int iterations)
+    public synchronized void writeDrawMap(int xcord,int ycord, boolean draw)
     {
-        z = new Complex(f.getReal(),f.getImaginary());
-        this.xcord = xcord;
-        this.ycord = ycord;
-        for(int x = 0; x< iterations; x++)
-            z = (Complex.addComplex(new Complex(-0.835,-0.2321),Complex.multiplyComplex(z,z)));
-
-        if(Math.sqrt(z.getReal()*z.getReal()+z.getImaginary()*z.getImaginary())<2)
-        {
-            writeDrawMap(true);
-        }
-        else
-            writeDrawMap(false);
+        Renderer.writeDrawMap(draw,xcord,ycord);
     }
 
-
-
-    public synchronized void writeDrawMap(boolean draw)
+    public void run()
     {
-        Renderer.drawMap[xcord][ycord] = draw;
-        isDone=true;
+        Mendlebraught();
     }
 
-
-    public boolean done ()
-    {
-        return isDone;
-    }
-
-
-
-    @Override
-    public void run() {
-
-        JuliaSet(new Complex(0, 0), xcord, ycord, iterations);
-    }
 }

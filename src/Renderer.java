@@ -3,7 +3,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.concurrent.Executors;
 
 import static java.lang.Character.toUpperCase;
 
@@ -18,7 +20,14 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     private final int width;
     private final int height;
     static boolean [][] drawMap;
-    private MathOperations [] threads = new MathOperations [10];
+    private Thread [] threads = new Thread [10];
+    Executor e = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+
+        }
+    };
+
     boolean init =  true;
     private double xRadian;
     private double yRadian;
@@ -39,9 +48,6 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         new Thread(this).start();
         addKeyListener(this);		//starts the key thread to log key strokes
         drawMap = new boolean [width] [height];
-        for(int x = 0; x<10; x++)
-            threads[x] = new MathOperations(new Complex(0, 0), 0, 0);
-
     }
 
 
@@ -52,6 +58,7 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
     }
 
     public void paint(Graphics window) {
+
         //set up the double buffering to make the game animation nice and smooth
         Graphics2D twoDGraph = (Graphics2D) window;
 
@@ -77,26 +84,15 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         {
             for(int y = 0; y< height; y++) {
 
-                while(!threads[threadIndex].done())//checks wich thread is finished and can start on new pixel
-                {
-                    if(threadIndex<7)
-                        threadIndex++;
-                    else
-                        threadIndex = 0;
-                }
-                threads[threadIndex].stop();
-
                 double graphx = 4*((double)x-((double)width/2))/(double)width;
                 double graphy = 4*((double)y-((double)height/2))/(double)width;
                 Complex z = new Complex(graphx,graphy);
-                //threads[threadIndex].begin(z, x, y, res);//attempts to start new thread <<--this is what does not work!!!!!
-                threads[threadIndex].JuliaSet(z,x,y,res);//working code, no multithreading, i think =(
+                e.execute(new MathOperations(z,x,y,10));
 
             }
             if(x%10 == 0)
                 System.out.println(x);
         }
-        res++;
 
 
         for(int x = 0; x< width; x++)
@@ -216,10 +212,14 @@ public class Renderer extends Canvas implements KeyListener,Runnable {
         zoom-= .01;
     }
 
+    public static synchronized void writeDrawMap(boolean state, int x, int y)
+    {
+        drawMap[x][y] = state;
+    }
 
 
 
-    //allows for the constant key listing
+
     public void run() {
         try {
             while (true) {
