@@ -77,4 +77,9 @@ public class Complex {
         return real;
     }
 
+    public Complex Clone()
+    {
+        return new Complex(real,imaginary);
+    }
+
 }
